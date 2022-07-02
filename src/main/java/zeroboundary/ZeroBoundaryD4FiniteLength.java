@@ -9,7 +9,7 @@ import java.util.Queue;
 public final class ZeroBoundaryD4FiniteLength {
 	
 // public:
-	public static boolean hasEden(final String r) {
+	public static boolean hasEden(final String r) {		// default: rL = 1, rR = 2
 		
 		if (r.length() != 16) {
 			throw new IllegalArgumentException("规则长度必须为16 。"
@@ -32,7 +32,7 @@ public final class ZeroBoundaryD4FiniteLength {
 		}
 		Map<Integer, TreeNode> visitedList = new HashMap<Integer, TreeNode>();
 		Queue<TreeNode> nodeList = new ArrayDeque<TreeNode>();
-		TreeNode rootNode = new TreeNode(15);
+		TreeNode rootNode = new TreeNode(15);			// should be TreeNode(3) when(2, 1).
 		nodeList.add(rootNode);
 		while (!nodeList.isEmpty()) {
 			TreeNode curr = nodeList.poll();
@@ -46,6 +46,14 @@ public final class ZeroBoundaryD4FiniteLength {
 					break;
 				}
 			}
+			/** Use code block below when(2, 1).
+			*	for (int i = 0; i < 8; i++) {
+			*		if (((curr.values >> (2 * i)) & 1) == 1) {
+			*			flag = false;
+			*			break;
+			*		}
+			*	}
+			**/
 			if (flag) {
 				return true;
 			}

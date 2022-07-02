@@ -1,26 +1,14 @@
 import java.io.IOException;
 
-import periodic.*;
+import finiteconfig.*;
 
 public class Test {
 	
 	public static void main(String[] args) throws IOException {
 		
-		for (int i = 0; i < 256; i++) {
-			String r = toEightBitString(i);
-			if (!PeriodicECAFiniteLength.hasEden(r)) {
-				System.out.println(r);
-			}
-		}
+		FiniteConfigD4.printSurjectiveRules();
+//		boolean b = FiniteConfigD4.hasEden("0000000000000000");
+//		System.out.println(b);
 	}
 	
-	public static String toEightBitString(int num) {
-		
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < 8; i++) {
-			buffer.insert(0, num & 1);
-			num >>= 1;
-		}
-		return buffer.toString();
-	}
 }

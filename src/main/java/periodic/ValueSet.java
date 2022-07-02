@@ -1,26 +1,16 @@
 package periodic;
 
 public final class ValueSet {
-
-	protected int values;
 	
-	protected int[] subValues;		// 00, 01, 10, 11
+	protected int[] subValues;		/* for ECA: 00, 01, 10, 11.
+									   for D4: 000, 001, 010, 011, 100, 101, 110, 111. */
 	
 	protected ValueSet() {
 		
-		values = 0;
-		subValues = new int[4];
-	}
-		
-	protected ValueSet(int values) {
-		
-		this.values = values;
-		subValues = new int[4];
 	}
 	
-	protected ValueSet(int values, int[] subValues) {
+	protected ValueSet(int[] subValues) {
 		
-		this.values = values;
 		this.subValues = subValues;
 	}
 

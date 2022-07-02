@@ -7,21 +7,21 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public final class PeriodicECAFiniteLength {
+public final class PeriodicD4FiniteLength {
 	
 // public:
 	public static boolean hasEden(final String r) {
 		
-		if (r.length() != 8) {
-			throw new IllegalArgumentException("规则长度必须为8 。"
-					+ "Length of rules must be 8. Input rules: " + r);
+		if (r.length() != 16) {
+			throw new IllegalArgumentException("规则长度必须为16 。"
+					+ "Length of rules must be 16. Input rules: " + r);
 		}
 		if (r.charAt(0) != '0' && r.charAt(0) != '1') {
 			throw new IllegalArgumentException("规则必须为01串。"
 					+ "Input rules must be binary. Input rules: " + r);
 		}
 		int rules = (r.charAt(0) == '1' ? 1 : 0);
-		for (int i = 1; i < 8; i++) {
+		for (int i = 1; i < 16; i++) {
 			rules <<= 1;
 			if (r.charAt(i) == '1') {
 				rules++;
@@ -33,7 +33,7 @@ public final class PeriodicECAFiniteLength {
 		Map<Integer, ValueSet> tree = new HashMap<Integer, ValueSet>();
 		Set<String> visited = new HashSet<String>();
 		Queue<Integer> nodeList = new ArrayDeque<Integer>();
-		ValueSet root = new ValueSet(new int[]{1, 2, 4, 8});
+		ValueSet root = new ValueSet(new int[]{1, 2, 4, 8, 16, 32, 64, 128});
 		tree.put(1, root);
 		visited.add(hash(root));
 		nodeList.offer(2);
@@ -41,16 +41,16 @@ public final class PeriodicECAFiniteLength {
 		while (!nodeList.isEmpty()) {
 			int idx = nodeList.poll();
 			ValueSet father = tree.get(idx / 2);
-			int[] subValues = new int[4];
+			int[] subValues = new int[8];
 			boolean isEden = true;
-			for (int i = 0; i < 4; i++) {
-				for (int k = 0; k < 4; k++) {
+			for (int i = 0; i < 8; i++) {
+				for (int k = 0; k < 8; k++) {
 					if (((father.subValues[k] >> i) & 1) == 1) {	
-						int pos = (i << 1) % 8;
+						int pos = (i << 1);
 						for (int j : new int[]{0, 1}) {
 							if (((rules >> (pos + j)) & 1) == (idx & 1)) {
-								subValues[k] |= (1 << ((pos + j) % 4));
-								if ((pos + j) % 4 == k) {
+								subValues[k] |= (1 << ((pos + j) % 8));
+								if ((pos + j) % 8 == k) {
 									isEden = false;
 								}
 							}
@@ -77,8 +77,8 @@ public final class PeriodicECAFiniteLength {
 		
 		long begin = System.currentTimeMillis();
 		int count = 0;
-		for (int i = 0; i < 256; i++) {
-			String r = toEightBitString(i);
+		for (int i = 0; i < 65536; i++) {
+			String r = toSixteenBitString(i);
 			if (!hasEden(r)) {
 				System.out.println(r);
 				count++;
@@ -89,10 +89,10 @@ public final class PeriodicECAFiniteLength {
 		System.out.println("执行用时：" + String.valueOf(end - begin) + "ms.");
 	}
 	
-	public static String toEightBitString(int num) {
+	public static String toSixteenBitString(int num) {
 		
 		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 16; i++) {
 			buffer.insert(0, num & 1);
 			num >>= 1;
 		}

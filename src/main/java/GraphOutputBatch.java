@@ -6,14 +6,12 @@ public class GraphOutputBatch {
 	
 	public static void main(String[] args) throws IOException {
 		
-		for (int model = 0; model < 3; model++) {
-			for (int num = 0; num < 256; num++) {
-				String rules = toEightBitString(num);
-				GlobalSurjectivity gs = new GlobalSurjectivity(rules, model);
-				TreeNode root = gs.getRootNode();
-				ShowProcedureTree.setPath("graph/" + model + "/");
-				ShowProcedureTree.storeImage(root, rules);
-			}
+		for (int num = 0; num < 256; num++) {
+			String rules = toEightBitString(num);
+			GlobalSurjectivity gs = new GlobalSurjectivity(rules, 3);
+			TreeNode root = gs.getRootNode();
+			ShowProcedureTree.setPath("graph/Ô­Ê÷/");
+			ShowProcedureTree.storeImage(root, rules);
 		}
 	}
 	
