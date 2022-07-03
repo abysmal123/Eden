@@ -27,4 +27,3 @@ src/main/java
             │       ╰━━━━ZeroBoundaryDiameter5.java                 // 规则直径5零边界满射问题（针对给定长度配置）
             │       ╰━━━━ZeroBoundaryECA.java                       // ECA零边界满射问题（针对给定长度配置）
             │       ╰━━━━ZeroBoundaryECAFiniteLength.java           // ECA零边界满射问题
-            ╰━━━━(default package)  // 此目录下是一些测试文件，并非功能代码
