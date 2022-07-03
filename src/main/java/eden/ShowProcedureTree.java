@@ -19,6 +19,7 @@ import java.util.Map;
 
 public final class ShowProcedureTree {
 
+// public:
 	public static void storeImage(TreeNode root, String title) throws IOException {
 		
 		MutableGraph graph = toGraph(root, title);
@@ -29,6 +30,7 @@ public final class ShowProcedureTree {
 		PATH = path;
 	}
 	
+//private:
 	private static String PATH = "graph/";
 	
 	private static int count = 0;

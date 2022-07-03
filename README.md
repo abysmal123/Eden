@@ -1,8 +1,8 @@
 # Eden
  Java laboratory(maven project) with respect to 'Garden of Eden' in the field of cellular automata.
  # Java classes
- ```
- src/main/java
+ ```java
+src/main/java
             ╰━━━━eden   // 无限配置满射问题
             │       ╰━━━━BuildTree.java                             // 由特定规则集作为根节点构造一棵树(ECA)   
             │       ╰━━━━GlobalSurjectivity.java                    // ECA无限配置满射问题 
@@ -17,6 +17,8 @@
             │       ╰━━━━PeriodicD4FiniteLength.java                // 规则直径4循环边界满射问题
             │       ╰━━━━PeriodicD5FiniteLength.java                // 规则直径5循环边界满射问题
             │       ╰━━━━PeriodicECAFiniteLength.java               // ECA循环边界满射问题
+            │       ╰━━━━ShowProcedureTreeD4.java                   // 规则直径4二叉树的可视化 
+            │       ╰━━━━ShowProcedureTreeECA.java                  // ECA二叉树的可视化
             │       ╰━━━━ValueSet.java                              // (protected)堆节点数据结构
             ╰━━━━zeroboundary   // 零边界满射问题
             │       ╰━━━━TreeNode.java                              // (protected)树节点数据结构
@@ -26,9 +28,3 @@
             │       ╰━━━━ZeroBoundaryECA.java                       // ECA零边界满射问题（针对给定长度配置）
             │       ╰━━━━ZeroBoundaryECAFiniteLength.java           // ECA零边界满射问题
             ╰━━━━(default package)  // 此目录下是一些测试文件，并非功能代码
-            │       ╰━━━━TreeNode.java
-            │       ╰━━━━ZeroBoundaryD4FiniteLength.java
-            │       ╰━━━━ZeroBoundaryD5FiniteLength.java
-            │       ╰━━━━ZeroBoundaryDiameter5.java
-            │       ╰━━━━ZeroBoundaryECA.java
-            │       ╰━━━━ZeroBoundaryECAFiniteLength.java                      ```
