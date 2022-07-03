@@ -1,5 +1,5 @@
 # Eden
- Java laboratory(maven project) with respect to 'Garden of Eden' in the field of cellular automata.
+ Java laboratory(maven project) with respect to 'Garden of Eden'(or Surjectivity) problem in the field of cellular automata.
  # Java classes
  ```java
 src/main/java
