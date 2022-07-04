@@ -112,7 +112,6 @@ public final class ShowProcedureTreeD4 {
 			procedureTree.put(idx, curr);
 			if (isEden) {
 				edenSet.add(idx);
-				continue;
 			}
 			if (visited.contains(hash(curr))) {
 				continue;
@@ -154,7 +153,7 @@ public final class ShowProcedureTreeD4 {
 				}
 			}
 		}
-		if (!edenSet.contains(idx) && !uniqueSet.contains(idx)) {
+		if (buffer.length() > 0 && !uniqueSet.contains(idx)) {
 			buffer.append("*");
 		}
 		MutableNode graphNode = mutNode((count++) + "");

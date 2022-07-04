@@ -27,3 +27,11 @@ src/main/java
             │       ╰━━━━ZeroBoundaryDiameter5.java                 // 规则直径5零边界满射问题（针对给定长度配置）
             │       ╰━━━━ZeroBoundaryECA.java                       // ECA零边界满射问题（针对给定长度配置）
             │       ╰━━━━ZeroBoundaryECAFiniteLength.java           // ECA零边界满射问题
+            ╰━━━━injectivity    // 无限配置单射问题
+            │       ╰━━━━BoxD4.java                                 // (protected)规则直径4：Box数据结构
+            │       ╰━━━━BoxECA.java                                // (protected)ECA：Box数据结构
+            │       ╰━━━━GlobalInjectivityD4.java                   // 规则直径4无限配置单射问题
+            │       ╰━━━━GlobalInjectivityECA.java                  // ECA无限配置单射问题
+            │       ╰━━━━GlobalSurjectivityD4.java                  // 规则直径4无限配置满射问题
+            │       ╰━━━━GlobalSurjectivityECA.java                 // ECA无限配置满射问题
+            │       ╰━━━━TreeNode.java                              // (protected)树节点数据结构
