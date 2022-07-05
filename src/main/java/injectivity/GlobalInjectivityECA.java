@@ -15,9 +15,6 @@ public final class GlobalInjectivityECA {
 // public:
 	public static boolean injectivity(final String r) {
 		
-		if (GlobalSurjectivityECA.hasEden(r)) {
-			return false;
-		}
 		if (r.length() != 8) {
 			throw new IllegalArgumentException("规则长度必须为8 。"
 					+ "Length of rules must be 8. Input rules: " + r);
@@ -35,6 +32,9 @@ public final class GlobalInjectivityECA {
 				throw new IllegalArgumentException("规则必须为01串。"
 						+ "Input rules must be binary. Input rules: " + r);
 			}
+		}
+		if (Integer.bitCount(rules) != 4) {
+			return false;
 		}
 		// Step1:
 		List<Integer> toZero = new ArrayList<Integer>();
@@ -122,7 +122,7 @@ public final class GlobalInjectivityECA {
 			return false;
 		}
 		// Step6:
-		for (Iterator<BoxECA> it = in.iterator(); it.hasNext();) {
+		for (Iterator<BoxECA> it = assignedBox.iterator(); it.hasNext();) {
 			BoxECA b = it.next();
 			if ((b.n1 >> 1) == (b.n2 >> 1)) {
 				return false;

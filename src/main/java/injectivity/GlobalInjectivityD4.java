@@ -15,9 +15,6 @@ public final class GlobalInjectivityD4 {
 // public:
 	public static boolean injectivity(final String r) {
 		
-		if (GlobalSurjectivityD4.hasEden(r)) {
-			return false;
-		}
 		if (r.length() != 16) {
 			throw new IllegalArgumentException("规则长度必须为16 。"
 					+ "Length of rules must be 16. Input rules: " + r);
@@ -35,6 +32,9 @@ public final class GlobalInjectivityD4 {
 				throw new IllegalArgumentException("规则必须为01串。"
 						+ "Input rules must be binary. Input rules: " + r);
 			}
+		}
+		if (Integer.bitCount(rules) != 8) {
+			return false;
 		}
 		// Step1:
 		List<Integer> toZero = new ArrayList<Integer>();
@@ -122,7 +122,7 @@ public final class GlobalInjectivityD4 {
 			return false;
 		}
 		// Step6:
-		for (Iterator<BoxD4> it = in.iterator(); it.hasNext();) {
+		for (Iterator<BoxD4> it = assignedBox.iterator(); it.hasNext();) {
 			BoxD4 b = it.next();
 			if ((b.n1 >> 1) == (b.n2 >> 1)) {
 				return false;
