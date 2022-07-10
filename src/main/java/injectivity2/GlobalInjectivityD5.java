@@ -1,4 +1,4 @@
-package periodic;
+package injectivity2;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public final class PeriodicD5FiniteLength {
+public final class GlobalInjectivityD5 {
 	
 // public:
-	public static boolean hasEden(final String r) {
+	public static boolean injectivity(final String r) {
 		
 		if (r.length() != 32) {
 			throw new IllegalArgumentException("规则长度必须为32 。"
@@ -31,6 +31,9 @@ public final class PeriodicD5FiniteLength {
 						+ "Input rules must be binary. Input rules: " + r);
 			}
 		}
+//		if (Integer.bitCount(rules) != 16) {
+//			return false;
+//		}
 		Map<Integer, ValueSet> tree = new HashMap<Integer, ValueSet>();
 		Set<String> visited = new HashSet<String>();
 		Queue<Integer> nodeList = new ArrayDeque<Integer>();
@@ -48,24 +51,38 @@ public final class PeriodicD5FiniteLength {
 			int idx = nodeList.poll();
 			ValueSet father = tree.get(idx / 2);
 			int[] subValues = new int[16];
-			boolean isEden = true;
-			for (int i = 0; i < 16; i++) {
-				for (int k = 0; k < 16; k++) {
+			int tupleCount = 0;
+			int periodicCount = 0;
+			for (int k = 0; k < 16; k++) {
+				for (int i = 0; i < 16; i++) {
 					if (((father.subValues[k] >> i) & 1) == 1) {	
 						int pos = (i << 1);
 						for (int j : new int[]{0, 1}) {
 							if (((rules >> (pos + j)) & 1) == (idx & 1)) {
+								tupleCount++;
 								subValues[k] |= (1 << ((pos + j) % 16));
 								if ((pos + j) % 16 == k) {
-									isEden = false;
+									periodicCount++;
+									if (periodicCount > 1) {
+										return false;
+									}
 								}
 							}
 						}
 					}
 				}
+				for (int i = 0; i < 8; i++) {
+					if (((subValues[k] >> i) & 1) == 1 && ((subValues[k] >> (i + 8)) & 1) == 1) {
+						for (int j : new int[]{0, 1}) {
+							if (((rules >> ((i << 1) + j)) & 1) == ((rules >> (((i + 8) << 1) + j)) & 1)) {
+								return false;
+							}
+						}	
+					}
+				}
 			}
-			if (isEden) {
-				return true;
+			if (tupleCount == 0) {
+				return false;
 			}
 			ValueSet curr = new ValueSet(subValues);
 			if (visited.contains(hash(curr))) {
@@ -76,16 +93,17 @@ public final class PeriodicD5FiniteLength {
 			nodeList.add(2 * idx);
 			nodeList.add(2 * idx + 1);
 		}
-		return false;
+		return true;
 	}
 	
-	public static void printSurjectiveRules() {
+	public static void printInjectiveRules() {
 		
 		long begin = System.currentTimeMillis();
 		count = 0;
 		rulesCharArr = new char[32];
 		Arrays.fill(rulesCharArr, '0');
-		dfs(0, 0);
+		rulesCharArr[0] = '1';
+		dfs(1, 1);
 		System.out.println("总计" + count + "条规则");
 		long end = System.currentTimeMillis();
 		System.out.println("执行用时：" + String.valueOf(end - begin) + "ms.");
@@ -96,7 +114,7 @@ public final class PeriodicD5FiniteLength {
 		
 		if (oneCount == 16) {
 			String r = new String(rulesCharArr);
-			if (!hasEden(r)) {
+			if (injectivity(r)) {
 				count++;
 				System.out.println(new String(rulesCharArr) + " " + count);
 			}

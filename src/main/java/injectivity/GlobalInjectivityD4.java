@@ -135,7 +135,7 @@ public final class GlobalInjectivityD4 {
 		
 		long begin = System.currentTimeMillis();
 		int count = 0;
-		for (int i = 0; i < 65536; i++) {
+		for (int i = 65535; i >= 32768; i--) {
 			String r = toSixteenBitString(i);
 			if (injectivity(r)) {
 				System.out.println(r);

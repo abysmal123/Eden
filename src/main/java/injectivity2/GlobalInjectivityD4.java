@@ -1,4 +1,4 @@
-package periodic;
+package injectivity2;
 
 import java.util.ArrayDeque;
 import java.util.HashMap;
@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public final class PeriodicD4FiniteLength {
+public final class GlobalInjectivityD4 {
 	
 // public:
-	public static boolean hasEden(final String r) {
+	public static boolean injectivity(final String r) {
 		
 		if (r.length() != 16) {
 			throw new IllegalArgumentException("规则长度必须为16 。"
@@ -30,6 +30,9 @@ public final class PeriodicD4FiniteLength {
 						+ "Input rules must be binary. Input rules: " + r);
 			}
 		}
+		if (Integer.bitCount(rules) != 8) {
+			return false;
+		}
 		Map<Integer, ValueSet> tree = new HashMap<Integer, ValueSet>();
 		Set<String> visited = new HashSet<String>();
 		Queue<Integer> nodeList = new ArrayDeque<Integer>();
@@ -42,24 +45,38 @@ public final class PeriodicD4FiniteLength {
 			int idx = nodeList.poll();
 			ValueSet father = tree.get(idx / 2);
 			int[] subValues = new int[8];
-			boolean isEden = true;
-			for (int i = 0; i < 8; i++) {
-				for (int k = 0; k < 8; k++) {
+			int tupleCount = 0;
+			int periodicCount = 0;
+			for (int k = 0; k < 8; k++) {
+				for (int i = 0; i < 8; i++) {
 					if (((father.subValues[k] >> i) & 1) == 1) {	
 						int pos = (i << 1);
 						for (int j : new int[]{0, 1}) {
 							if (((rules >> (pos + j)) & 1) == (idx & 1)) {
+								tupleCount++;
 								subValues[k] |= (1 << ((pos + j) % 8));
 								if ((pos + j) % 8 == k) {
-									isEden = false;
+									periodicCount++;
+									if (periodicCount > 1) {
+										return false;
+									}
 								}
 							}
 						}
 					}
 				}
+				for (int i = 0; i < 4; i++) {
+					if (((subValues[k] >> i) & 1) == 1 && ((subValues[k] >> (i + 4)) & 1) == 1) {
+						for (int j : new int[]{0, 1}) {
+							if (((rules >> ((i << 1) + j)) & 1) == ((rules >> (((i + 4) << 1) + j)) & 1)) {
+								return false;
+							}
+						}	
+					}
+				}
 			}
-			if (isEden) {
-				return true;
+			if (tupleCount == 0) {
+				return false;
 			}
 			ValueSet curr = new ValueSet(subValues);
 			if (visited.contains(hash(curr))) {
@@ -70,16 +87,16 @@ public final class PeriodicD4FiniteLength {
 			nodeList.add(2 * idx);
 			nodeList.add(2 * idx + 1);
 		}
-		return false;
+		return true;
 	}
 	
-	public static void printSurjectiveRules() {
+	public static void printInjectiveRules() {
 		
 		long begin = System.currentTimeMillis();
 		int count = 0;
-		for (int i = 0; i < 65536; i++) {
+		for (int i = 65535; i >= 32768; i--) {
 			String r = toSixteenBitString(i);
-			if (!hasEden(r)) {
+			if (injectivity(r)) {
 				System.out.println(r);
 				count++;
 			}

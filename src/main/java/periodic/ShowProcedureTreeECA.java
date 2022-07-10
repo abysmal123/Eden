@@ -127,7 +127,7 @@ public final class ShowProcedureTreeECA {
 		
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < vs.subValues.length; i++) {
-			buffer.append(i + "." + vs.subValues[i] + ".");
+			buffer.append(vs.subValues[i] + ".");
 		}
 		return buffer.toString();
 	}

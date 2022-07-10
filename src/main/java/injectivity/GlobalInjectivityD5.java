@@ -2,6 +2,7 @@ package injectivity;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,21 +11,21 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public final class GlobalInjectivityECA {
+public final class GlobalInjectivityD5 {
 	
 // public:
 	public static boolean injectivity(final String r) {
 		
-		if (r.length() != 8) {
-			throw new IllegalArgumentException("规则长度必须为8 。"
-					+ "Length of rules must be 8. Input rules: " + r);
+		if (r.length() != 32) {
+			throw new IllegalArgumentException("规则长度必须为32 。"
+					+ "Length of rules must be 32. Input rules: " + r);
 		}
 		if (r.charAt(0) != '0' && r.charAt(0) != '1') {
 			throw new IllegalArgumentException("规则必须为01串。"
 					+ "Input rules must be binary. Input rules: " + r);
 		}
 		int rules = (r.charAt(0) == '1' ? 1 : 0);
-		for (int i = 1; i < 8; i++) {
+		for (int i = 1; i < 32; i++) {
 			rules <<= 1;
 			if (r.charAt(i) == '1') {
 				rules++;
@@ -33,13 +34,10 @@ public final class GlobalInjectivityECA {
 						+ "Input rules must be binary. Input rules: " + r);
 			}
 		}
-		if (Integer.bitCount(rules) != 4) {
-			return false;
-		}
 		// Step1:
 		List<Integer> toZero = new ArrayList<Integer>();
 		List<Integer> toOne = new ArrayList<Integer>();
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 32; i++) {
 			if (((rules >> i) & 1) == 1) {
 				toOne.add(i);
 			} else {
@@ -47,12 +45,12 @@ public final class GlobalInjectivityECA {
 			}
 		}
 		// Step2&3:
-		Set<BoxECA> in = new HashSet<BoxECA>();
-		Set<BoxECA> out = new HashSet<BoxECA>();
-		Queue<BoxECA> crossOutList = new ArrayDeque<BoxECA>();
-		for (int i = 0; i < 3; i++) {
-			for (int j = i + 1; j < 4; j++) {
-				BoxECA box = new BoxECA(toZero.get(i), toZero.get(j), rules);
+		Set<BoxD5> in = new HashSet<BoxD5>();
+		Set<BoxD5> out = new HashSet<BoxD5>();
+		Queue<BoxD5> crossOutList = new ArrayDeque<BoxD5>();
+		for (int i = 0; i < 15; i++) {
+			for (int j = i + 1; j < 16; j++) {
+				BoxD5 box = new BoxD5(toZero.get(i), toZero.get(j), rules);
 				if (box.sequentSet.contains(box)) {
 					return false;
 				}
@@ -62,7 +60,7 @@ public final class GlobalInjectivityECA {
 				} else {
 					in.add(box);
 				}
-				box = new BoxECA(toOne.get(i), toOne.get(j), rules);
+				box = new BoxD5(toOne.get(i), toOne.get(j), rules);
 				if (box.sequentSet.contains(box)) {
 					return false;
 				}
@@ -76,9 +74,9 @@ public final class GlobalInjectivityECA {
 		}
 		// Step4:
 		while (!crossOutList.isEmpty()) {
-			BoxECA curr = crossOutList.poll();
-			for (Iterator<BoxECA> it = in.iterator(); it.hasNext();) {
-				BoxECA b = it.next();
+			BoxD5 curr = crossOutList.poll();
+			for (Iterator<BoxD5> it = in.iterator(); it.hasNext();) {
+				BoxD5 b = it.next();
 				if (b.sequentSet.contains(curr)) {
 					b.sequentSet.remove(curr);
 					if (b.sequentSet.isEmpty()) {
@@ -90,19 +88,19 @@ public final class GlobalInjectivityECA {
 			}
 		}
 		// Step5:
-		Map<BoxECA, Integer> weights = new HashMap<BoxECA, Integer>();
-		for (int i = 0; i < 8; i++) {
-			weights.put(new BoxECA(i, i), 0);
+		Map<BoxD5, Integer> weights = new HashMap<BoxD5, Integer>();
+		for (int i = 0; i < 32; i++) {
+			weights.put(new BoxD5(i, i), 0);
 		}
-		Set<BoxECA> assignedBox = new HashSet<BoxECA>();
+		Set<BoxD5> assignedBox = new HashSet<BoxD5>();
 		int t = in.size();
 		while (t > 0) {
-			for (Iterator<BoxECA> it1 = in.iterator(); it1.hasNext();) {
-				BoxECA b = it1.next();
+			for (Iterator<BoxD5> it1 = in.iterator(); it1.hasNext();) {
+				BoxD5 b = it1.next();
 				int maxWeight = -1;
 				boolean flag = true;
-				for (Iterator<BoxECA> it2 = b.sequentSet.iterator(); it2.hasNext();) {
-					BoxECA s = it2.next();
+				for (Iterator<BoxD5> it2 = b.sequentSet.iterator(); it2.hasNext();) {
+					BoxD5 s = it2.next();
 					if (weights.containsKey(s)) {
 						maxWeight = Math.max(maxWeight, weights.get(s));
 					} else {
@@ -122,8 +120,8 @@ public final class GlobalInjectivityECA {
 			return false;
 		}
 		// Step6:
-		for (Iterator<BoxECA> it = assignedBox.iterator(); it.hasNext();) {
-			BoxECA b = it.next();
+		for (Iterator<BoxD5> it = assignedBox.iterator(); it.hasNext();) {
+			BoxD5 b = it.next();
 			if ((b.n1 >> 1) == (b.n2 >> 1)) {
 				return false;
 			}
@@ -134,27 +132,38 @@ public final class GlobalInjectivityECA {
 	public static void printInjectiveRules() {
 		
 		long begin = System.currentTimeMillis();
-		int count = 0;
-		for (int i = 255; i > 128; i--) {
-			String r = toEightBitString(i);
-			if (injectivity(r)) {
-				System.out.println(r);
-				count++;
-			}
-		}
+		count = 0;
+		rulesCharArr = new char[32];
+		Arrays.fill(rulesCharArr, '0');
+		rulesCharArr[0] = '1';
+		dfs(1, 1);
 		System.out.println("总计" + count + "条规则");
 		long end = System.currentTimeMillis();
 		System.out.println("执行用时：" + String.valueOf(end - begin) + "ms.");
 	}
 	
-	public static String toEightBitString(int num) {
+// private:
+	private static void dfs(int oneCount, int pos) {
 		
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < 8; i++) {
-			buffer.insert(0, num & 1);
-			num >>= 1;
+		if (oneCount == 16) {
+			String r = new String(rulesCharArr);
+			if (injectivity(r)) {
+				count++;
+				System.out.println(new String(rulesCharArr) + " " + count);
+			}
+			return;
 		}
-		return buffer.toString();
+		if (16 - oneCount > 32 - pos) {
+			return;
+		}
+		rulesCharArr[pos] = '1';
+		dfs(oneCount + 1, pos + 1);
+		rulesCharArr[pos] = '0';
+		dfs(oneCount, pos + 1);
 	}
-
+	
+	private static char[] rulesCharArr;
+	
+	private static int count;
+	
 }
